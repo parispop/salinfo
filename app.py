@@ -24,9 +24,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Database Model
 class UserData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    chat_id = db.Column(db.String(100), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    """chat_id = db.Column(db.String(100), nullable=False)"""
+    """name = db.Column(db.String(100), nullable=False)"""
+    email = db.Column(db.String(120), unique=False, nullable=False)
     stored_url = db.Column(db.String(300), nullable=False)
 
 # Create database tables before request
@@ -109,7 +109,8 @@ def extract_content():
 @app.route('/api/store', methods=['POST'])
 def store_data():
     data = request.json
-    user = UserData(chat_id=data['ChatID'], name=data['Name'], email=data['Email'], stored_url=data['storedURL'])
+    """user = UserData(chat_id=data['ChatID'], name=data['Name'], email=data['Email'], stored_url=data['storedURL'])"""
+    user = UserData(email=data['Email'], stored_url=data['storedURL'])
     db.session.add(user)
     db.session.commit()
     return jsonify({'message': 'Data stored successfully'}), 201
@@ -118,7 +119,9 @@ def store_data():
 @app.route('/api/retrieve', methods=['GET'])
 def retrieve_url():
     email = request.args.get('email')
-    user = UserData.query.filter_by(email=email).first()
+    """user = UserData.query.filter_by(email=email).first()"""
+    user = UserData.query.filter_by(email=email).order_by(UserData.id.desc()).first()
+    
     if user:
         return jsonify({'storedURL': user.stored_url}), 200
     return jsonify({'error': 'User not found'}), 404
