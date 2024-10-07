@@ -30,7 +30,7 @@ class UserData(db.Model):
     stored_url = db.Column(db.String(300), nullable=False)
 
 # Create database tables before request
-@app.before_first_request
+@app.before_request
 def create_tables():
     db.create_all()
 
