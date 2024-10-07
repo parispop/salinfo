@@ -1,0 +1,9 @@
+flask 
+flask_sqlalchemy
+flask_cors
+Flask
+requests
+PyPDF2
+python-docx
+gunicorn
+beautifulsoup4
